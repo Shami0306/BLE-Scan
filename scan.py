@@ -51,21 +51,21 @@ ble_filter = {
 
 while True:
     scanner = Scanner().withDelegate(ScanDelegate())
-    devices = scanner.scan(0.3, passive=True)
+    devices = scanner.scan(0.1, passive=True)
 
     for dev in devices:
         uid = dev.getValueText(3)
-        if uid == "None":
+        if str(uid) == "None":
             continue
-        logger.info(datetime.now().isoformat()+'\t'+dev.addr+'\t'+dev.addrType+'\t'+str(dev.rssi)+'\t'+dev.getValueText(3))
+        logger.info(datetime.now().isoformat()+'\t'+dev.addr+'\t'+dev.addrType+'\t'+str(dev.rssi)+'\t'+ str(uid))
         
         if uid in ble_filter:
                 my_data = {"time":datetime.now().isoformat(),
                            "mac":dev.addr,
                            "type":dev.addrType,
                            "RSSI":str(dev.rssi),
-			   "uuid":uid}
-                r = requests.post('http://140.116.72.66:9527/sniffer_four', data=my_data)
+			   "uuid":str(uid)}
+                r = requests.post('http://140.116.72.66:9527/sniffer_six', data=my_data)
 	# print("Device {} {}, RSSI = {} db {}".format(dev.addr, dev.addrType, dev.rssi, dev.getScanData()))
         # for (adtype, desc, value) in dev.getScanData():
         #     print ("{} {}".format(desc, value))
